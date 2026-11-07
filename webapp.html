@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bot Panel</title>
+<script src="https://cdn.jsdelivr.net/npm/telegram-webapps@0.0.1/dist/index.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: #f0f0f8;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding-bottom: 16px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+    padding: 14px 16px 8px;
+    letter-spacing: 0.2px;
+  }
+
+  /* ── TABLE ── */
+  .info-card {
+    background: #fff;
+    margin: 0 0 16px;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: #f7f7fb;
+  }
+
+  thead th {
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    text-align: left;
+    border-bottom: 1px solid #e8e8f0;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #eeeef6;
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f7f7fb;
+  }
+
+  tbody td {
+    padding: 10px 16px;
+    font-size: 13.5px;
+    color: #1a1a2e;
+    vertical-align: middle;
+  }
+
+  tbody td.label {
+    color: #444;
+    font-weight: 500;
+    width: 38%;
+  }
+
+  tbody td.value {
+    color: #1a1a2e;
+  }
+
+  .value-link {
+    color: #7b5ea7;
+    font-weight: 500;
+  }
+
+  /* Premium badge */
+  .prem-badge {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .prem-check {
+    width: 20px;
+    height: 20px;
+    background: #3cb371;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .prem-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .prem-label {
+    font-size: 12px;
+    color: #888;
+  }
+
+  /* ── BUTTON GRID ── */
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 10px 8px;
+  }
+
+  .btn-action {
+    padding: 14px 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.1px;
+    transition: filter 0.1s, transform 0.1s;
+  }
+
+  .btn-action:active {
+    filter: brightness(0.88);
+    transform: scale(0.97);
+  }
+
+  .btn-green  { background: #4caf72; }
+  .btn-purple { background: #9b72cf; }
+  .btn-red    { background: #c0605a; }
+  .btn-full   { grid-column: 1 / -1; }
+
+  /* Daftar Premium */
+  .daftar-row {
+    text-align: center;
+    padding: 10px 16px 6px;
+    font-size: 12.5px;
+    color: #7b5ea7;
+    cursor: pointer;
+  }
+
+  /* Timestamp */
+  .timestamp {
+    text-align: right;
+    padding: 2px 14px 10px;
+    font-size: 11.5px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<!-- ABOUT BOT -->
+<div class="section-header">ABOUT BOT</div>
+<div class="info-card">
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Detail</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="label">Developer</td><td class="value value-link" id="devName">@ReyValdz</td></tr>
+      <tr><td class="label">Bot Name</td><td class="value" id="botName">MyBot</td></tr>
+      <tr><td class="label">Version</td><td class="value" id="botVersion">1.0.0</td></tr>
+      <tr><td class="label">League</td><td class="value" id="botLeague">NodeJs ( Java Script )</td></tr>
+      <tr><td class="label">Runtime</td><td class="value" id="botRuntime">0d, 0h, 0m, 0s</td></tr>
+      <tr><td class="label">Tanggal</td><td class="value" id="botDate">-</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ABOUT USER -->
+<div class="section-header">ABOUT USER</div>
+<div class="info-card">
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Detail</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="label">Username</td><td class="value value-link" id="userName">@ReyValdz</td></tr>
+      <tr>
+        <td class="label">Premium</td>
+        <td class="value">
+          <div class="prem-badge">
+            <div class="prem-check">✓</div>
+            <div class="prem-info">
+              <span id="premStatus" style="font-size:13px;font-weight:600;">Active</span>
+              <span class="prem-label" id="premExpired">Expired 22/8/2300, 16.18.40</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr><td class="label">User ID</td><td class="value" id="userId">7492782458</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="timestamp" id="msgTime">17:46</div>
+
+<!-- BUTTONS -->
+<div class="btn-grid">
+  <button class="btn-action btn-green"  onclick="sendCmd('reseller')">Reseller Panel</button>
+  <button class="btn-action btn-green"  onclick="sendCmd('protection')">Protection Menu</button>
+  <button class="btn-action btn-green"  onclick="sendCmd('install')">Install Menu</button>
+  <button class="btn-action btn-green"  onclick="sendCmd('encrypt')">Encrypt Menu</button>
+  <button class="btn-action btn-green"  onclick="sendCmd('buildapk')">Build Apk</button>
+  <button class="btn-action btn-green"  onclick="sendCmd('waattack')">WhatsApp Attack</button>
+  <button class="btn-action btn-purple btn-full" onclick="sendCmd('contact')">Contact Developer ↗</button>
+  <button class="btn-action btn-red    btn-full" onclick="sendCmd('owner')">Owner Menu</button>
+</div>
+
+<div class="daftar-row" onclick="sendCmd('daftar')">Daftar User Premium</div>
+
+<script>
+  // ── INIT TELEGRAM WEBAPP ──────────────────────────────────
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    // Set tema sesuai Telegram
+    if (tg.colorScheme === 'dark') {
+      document.body.style.background = '#1a1a2e';
+      document.body.style.color = '#e8e8f8';
+    }
+  }
+
+  // ── DATA DARI URL PARAMS (dikirim bot) ───────────────────
+  // Bot kirim: ?dev=@ReyValdz&botname=MyBot&ver=1.0.0&
+  //            user=@Mantap&userid=123&prem=1&exp=22/8/2300,16.18.40&startTime=<epoch>
+  const params = new URLSearchParams(window.location.search);
+
+  const dev      = params.get('dev')       || '@ReyValdz';
+  const botName  = params.get('botname')   || 'MyBot';
+  const version  = params.get('ver')       || '1.0.0';
+  const league   = params.get('league')    || 'NodeJs ( Java Script )';
+  const startEpoch = parseInt(params.get('start') || Date.now());
+  const userName = params.get('user')      || '@User';
+  const userId   = params.get('userid')    || '-';
+  const isPrem   = params.get('prem')      === '1';
+  const expStr   = params.get('exp')       || '-';
+
+  // Isi data
+  document.getElementById('devName').textContent   = dev;
+  document.getElementById('botName').textContent   = botName;
+  document.getElementById('botVersion').textContent = version;
+  document.getElementById('botLeague').textContent  = league;
+  document.getElementById('userName').textContent   = userName;
+  document.getElementById('userId').textContent     = userId;
+
+  if (!isPrem) {
+    document.querySelector('.prem-check').style.background = '#e05050';
+    document.querySelector('.prem-check').textContent = '✕';
+    document.getElementById('premStatus').textContent = 'Not Premium';
+    document.getElementById('premExpired').textContent = '';
+  } else {
+    document.getElementById('premExpired').textContent = `Expired ${expStr}`;
+  }
+
+  // ── TANGGAL ──────────────────────────────────────────────
+  const now   = new Date();
+  const days  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const mons  = ['Januari','Februari','Maret','April','Mei','Juni',
+                 'Juli','Agustus','September','Oktober','November','Desember'];
+  document.getElementById('botDate').textContent =
+    `${days[now.getDay()]}, ${now.getDate()} ${mons[now.getMonth()]} ${now.getFullYear()}`;
+
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('msgTime').textContent = `${hh}:${mm}`;
+
+  // ── RUNTIME ──────────────────────────────────────────────
+  function updateRuntime() {
+    const elapsed = Math.floor((Date.now() - startEpoch) / 1000);
+    const d = Math.floor(elapsed / 86400);
+    const h = Math.floor((elapsed % 86400) / 3600);
+    const m = Math.floor((elapsed % 3600) / 60);
+    const s = elapsed % 60;
+    document.getElementById('botRuntime').textContent = `${d}d, ${h}h, ${m}m, ${s}s`;
+  }
+  setInterval(updateRuntime, 1000);
+  updateRuntime();
+
+  // ── BUTTON HANDLER ───────────────────────────────────────
+  // Kirim data ke bot via sendData, bot terima di webhook
+  function sendCmd(cmd) {
+    if (tg) {
+      tg.sendData(cmd);
+    } else {
+      // fallback preview browser
+      alert('CMD: ' + cmd);
+    }
+  }
+</script>
+</body>
+</html>
